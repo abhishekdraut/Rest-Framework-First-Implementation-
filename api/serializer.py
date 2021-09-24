@@ -3,8 +3,9 @@ from rest_framework import serializers
 from rest_framework.fields import DateField
 
 
-class blog(serializers.Serializer):
+class blogseri(serializers.Serializer):
 
-    title = serializers.CharField(max_length=10)
-    description=serializers.CharField(max_length=20)
-    date=DateField()
+    title1 = serializers.CharField(max_length=10)
+    description1=serializers.CharField(max_length=20)
+    remark=serializers.CharField(max_length=255)
+    date1=DateField()

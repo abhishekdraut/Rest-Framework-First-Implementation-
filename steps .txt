@@ -1,0 +1,41 @@
+1) setup the venv.
+2) create the Django Project     !!!!!stop right after that step dont create app first like usual.
+3) install Djnaogrestframework (pip install djangorestframework).
+4) add the rest framework to settings install apps.
+5) create app and add app in the settings install app.
+6) map the urls of app in root project directory.
+            
+        ### URL MAPPING ###URL
+7) in app.views add url for your class base view ,just add .as_view() in last .#***[path('api_viewset',views.HelloAPI.as_view())]#
+8) create that class in the views.just add/inherite (views.APIView) in class.
+ 
+        ### Model Creation #####
+9) after that create the method function in that class.like ,def get(self,request),def post(self,request),def put(self,request).
+10)craete model in traditional way.
+
+        ## serializer file creation ####
+11)create serializer file in the directory.(serializer.py).
+12)import serializer module in the serializer file form rest_framework.(if rest framework is not loading then reboot the pyhton enviromnt)
+13)create  class in serializer file.****[class any_name(serializers.Serializer):].***you have to import that any_name into views later.
+14)create fields in the serializer class.***[ title1 = serializers.CharField(max_length=10)] CharField or any field in serializer class
+   helps you validate data. 
+
+        ### Import that serializer class in the views ####
+15)import that serializer in the views[from . import serializer as Blog_serializer]
+16)also import model class in the views[from . models import blog as BlogModel]
+
+        ### assingning in the serialilzer class ###
+17)defined that serializer class in views class globaly and assign into serializer_class .[serializer_class = Blog_serializer.blogseri]
+
+        ### Passing the data in the serializers class ###
+18)now in the post method assign that serializer_class to some variable,And pass the request.data in that.
+     blog_seri= self.serializer_class(data=request.data)->with the help of serializers class we assigning request.data in
+      serialzer class object to convert into pyhton understandable language.
+
+        ### Fetch the validated (converted/py understandable) data from serializer class object ###
+19)then fetch that data from that object like [title=blog_seri.validated_data.get('title1')]**here title 1 is 
+        field name inserializer and [class.validated_data.get("")] helps you fetch that converted data.
+
+        ### Savig converted data into you models (DB) ###
+20)your json object is now converted into py readable object.
+21)just pass that fields in to your DB as usually and use  .save() to save the fields in the DB.        

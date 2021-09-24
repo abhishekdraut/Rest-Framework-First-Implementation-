@@ -3,11 +3,12 @@ from rest_framework import views, response, status
 from . models import blog as BlogModel
 from . import serializer as Blog_serializer
 
+
 # Create your views here.
 
 
 class HelloAPI(views.APIView):
-    serializer_class = Blog_serializer.blog
+    serializer_class = Blog_serializer.blogseri
     def get(self, request):
         blogmodel = BlogModel.objects.all()
         dictionary = {}
@@ -29,12 +30,10 @@ class HelloAPI(views.APIView):
 
         blog_seri= self.serializer_class(data=request.data)
         if blog_seri.is_valid():
-            title=blog_seri.validated_data.get('title')
-            description=blog_seri.validated_data.get('description')
-            date=blog_seri.validated_data.get('date')
-            print(title)
-            print(description)
-            print(date)
+            title=blog_seri.validated_data.get('title1')
+            description=blog_seri.validated_data.get('description1')
+            date=blog_seri.validated_data.get('date1')
+            
             blog=BlogModel.objects.create(title=title, description=description,date=date)
             print(blog)
             blog.save()
