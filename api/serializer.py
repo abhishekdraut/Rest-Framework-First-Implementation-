@@ -7,5 +7,5 @@ class blogseri(serializers.Serializer):
 
     title1 = serializers.CharField(max_length=10)
     description1=serializers.CharField(max_length=20)
-    remark=serializers.CharField(max_length=255)
+    
     date1=DateField()

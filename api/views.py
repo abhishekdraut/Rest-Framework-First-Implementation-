@@ -1,4 +1,6 @@
 
+from functools import partial
+from django.core.checks import messages
 from rest_framework import views, response, status
 from . models import blog as BlogModel
 from . import serializer as Blog_serializer
@@ -15,12 +17,7 @@ class HelloAPI(views.APIView):
             dictionary=BlogModel.objects.get(id=api_pk)
             dictionary=model_to_dict(dictionary)
             print(dictionary)
-            """ for key,each in enumerate(dictionary):
-                dictionary[key]={
-                    "title":each.title,
-                    "disc":each.desc,
-                    'data':each.date
-                } """
+            
             print(type(dictionary))
         else:    
             blogmodel1 = BlogModel.objects.all()
@@ -53,6 +50,54 @@ class HelloAPI(views.APIView):
             blog.save()
             return response.Response({'message':'Successfully submited'}) 
         else:
-            return response.Response(blog_seri.errors,status=status.HTTP_400_BAD_REQUEST)   
+            return response.Response(blog_seri.errors,status=status.HTTP_400_BAD_REQUEST)  
 
+
+
+    def put(self,request,api_pk):
+        blog_seri=self.serializer_class(data=request.data)
+        dbobject=BlogModel.objects.get(id=api_pk)
+        if blog_seri.is_valid():
+            title=blog_seri.validated_data.get('title1')
+            description=blog_seri.validated_data.get('description1')
+            date=blog_seri.validated_data.get('date1')
+            dbobject.title=title
+            dbobject.description=description
+            dbobject.date=date
+            dbobject.save()
+            print(dbobject)
+            return response.Response({'message':'Successfully updated object'}) 
+        else:
+            return response.Response(blog_seri.errors,status=status.HTTP_400_BAD_REQUEST) 
         
+            
+
+    def patch(self,request,api_pk):
+        
+        if api_pk is not None:
+            dbobject=BlogModel.objects.get(id=api_pk)
+            blog_seri=self.serializer_class(dbobject,data=request.data,partial=True)
+            if blog_seri.is_valid():
+                title=blog_seri.validated_data.get('title1')
+                description=blog_seri.validated_data.get('description1')
+                date=blog_seri.validated_data.get('date1')
+                if title is not None:
+                    dbobject.title=title
+                if description is not None: 
+                    dbobject.description=description   
+                if date is not None:
+                    dbobject.date=date
+                dbobject.save()
+                return response.Response({'message':"succesfully Updated partial value"})
+            else:
+                return response.Response(blog_seri.errors,status=status.HTTP_400_BAD_REQUEST)        
+        else:
+            return response.Response({"message":"pk is required "})
+
+    def delete(self,request,api_pk=None):
+        if api_pk:
+            dbobject=BlogModel.objects.get(id=api_pk).delete()
+            
+            return response.Response({"message":'Succesfuly deleted'})
+        else:
+            return response.Response({"pk is required!!"})
