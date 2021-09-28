@@ -7,3 +7,11 @@
 4) Patch---> used to update the partial object  and we have to use PUT methods raw data to sending input.We cant just use form data to 
    send single value.In patch we have to pass the three parameters insted of three [data=request.data, queary object and partial=true]
    partial generally tales us that the data is goin to update partially.(partially bypass the null validations)
+
+
+
+
+
+
+asdjbakjsbdasd
+   ....
