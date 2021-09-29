@@ -9,3 +9,4 @@ class blogseri(serializers.Serializer):
     description1=serializers.CharField(max_length=20)
     
     date1=DateField()
+

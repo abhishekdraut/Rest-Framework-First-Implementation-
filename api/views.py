@@ -3,6 +3,7 @@ from functools import partial
 from django.core.checks import messages
 from django.core.validators import validate_email
 from rest_framework import views, response, status,viewsets
+from rest_framework.serializers import Serializer
 from . models import blog as BlogModel
 from . import serializer as Blog_serializer
 from django.forms.models import model_to_dict
@@ -103,19 +104,45 @@ class HelloAPI(views.APIView):
         else:
             return response.Response({"pk is required!!"})
 
-# class HelloApi_viewsets(viewsets.ViewSet):
-    serializer=Blog_serializer.blogseri
-    def list(self,request):
-
-        printname=['this is is msg printing for the utility']
-        return response.Response(printname)
-
-    def create(self,request):
-        blog_seri=self.serializer(data=request.data)
+class hello(views.APIView):
+    serializer_class=Blog_serializer.blogseri
+    def get(self,request):
+        blogmodel=BlogModel.objects.all()
+        print(blogmodel)
+        dict={}
+        for key,each in enumerate(blogmodel):
+            dict[key]={
+                "title":each.title,
+                "desc:":each.description,
+                "date":each.date
+            }
+        dict=list(dict.values())    
+        print(dict)    
+        return response.Response({"data":dict})
+    def post(self,request):
+        blog_seri=self.serializer_class(data=request.data)
         if blog_seri.is_valid():
-            title=blog_seri.validated_data.get("title1")
-            description=blog_seri.validated_data.get("description1")
-            date
+            title1=blog_seri.validated_data.get("title1")
+            obj=BlogModel()
+            obj.title=title1
+            obj.save()
+            print(obj)
+        else:
+            return response.Response({"message":"error"})    
+        return response.Response("successfully updated")    
+    
+# class HelloApi_viewsets(viewsets.ViewSet):
+#     serializer=Blog_serializer.blogseri
+#     def list(self,request):
+        
+#         printname=['this is is msg printing for the utility']
+#         return response.Response(printname)
+
+#     def create(self,request):
+#         blog_seri=self.serializer(data=request.data)
+#         if blog_seri.is_valid():
+            
+            
 
        
 
