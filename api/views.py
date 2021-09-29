@@ -26,14 +26,14 @@ class HelloAPI(views.APIView):
         else:    
             blogmodel1 = BlogModel.objects.all()
             
-            # dictionary = {}
-            # for key ,each_blog in enumerate(blogmodel1):
-            #     dictionary[key]={
-            #         "title":each_blog.title,
-            #         "details":each_blog.description,
-            #         'date':each_blog.date,
-            #     }
-            dictionary=model_to_dict(blogmodel1)    
+            dictionary = {}
+            for key ,each_blog in enumerate(blogmodel1):
+                dictionary[key]={
+                    "title":each_blog.title,
+                    "details":each_blog.description,
+                    'date':each_blog.date,
+                }
+            # dictionary=model_to_dict(blogmodel1)    
             print(dictionary)
             dictionary=list(dictionary.values())
             print(dictionary)
