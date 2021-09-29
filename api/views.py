@@ -9,11 +9,13 @@ from . import serializer as Blog_serializer
 from django.forms.models import model_to_dict
 
 # Create your views here.
-
+# Prper way to create the api views just addition of serializers and their validator are increase.
 
 class HelloAPI(views.APIView):
-    serializer_class = Blog_serializer.blogseri
+    serializer_class = Blog_serializer.blogseri                                #first add your serializer to serializer_Class
+    
     def get(self, request,api_pk=None):
+        
         if api_pk is not None:
             
             dictionary=BlogModel.objects.get(id=api_pk)
@@ -23,27 +25,30 @@ class HelloAPI(views.APIView):
             print(type(dictionary))
         else:    
             blogmodel1 = BlogModel.objects.all()
-            dictionary = {}
-            for key ,each_blog in enumerate(blogmodel1):
-                dictionary[key]={
-                    "title":each_blog.title,
-                    "details":each_blog.description,
-                    'date':each_blog.date,
-                }
-            """ dictionary=model_to_dict(blogmodel1)  """   
+            
+            # dictionary = {}
+            # for key ,each_blog in enumerate(blogmodel1):
+            #     dictionary[key]={
+            #         "title":each_blog.title,
+            #         "details":each_blog.description,
+            #         'date':each_blog.date,
+            #     }
+            dictionary=model_to_dict(blogmodel1)    
             print(dictionary)
             dictionary=list(dictionary.values())
             print(dictionary)
+            
         
         
         
-        return response.Response({'data': dictionary})
+        return response.Response({'data':dictionary})
 
     def post(self,request):
 
-        blog_seri= self.serializer_class(data=request.data)
+        blog_seri= self.serializer_class(data=request.data)     #second pass the request data to serializer and use that data through 
+                                                                #validator .is valid() is must to fetch data from serializer.        
         if blog_seri.is_valid():
-            title=blog_seri.validated_data.get('title1')
+            title=blog_seri.validated_data.get('title1')        #extraction of validated data.
             description=blog_seri.validated_data.get('description1')
             date=blog_seri.validated_data.get('date1')
             
@@ -56,8 +61,8 @@ class HelloAPI(views.APIView):
 
 
 
-    def put(self,request,api_pk):
-        blog_seri=self.serializer_class(data=request.data)
+    def put(self,request,api_pk):                                        # pk is need to update the particular data in api views.
+        blog_seri=self.serializer_class(data=request.data)               # evry time you have to pass the data through serializers.
         dbobject=BlogModel.objects.get(id=api_pk)
         if blog_seri.is_valid():
             title=blog_seri.validated_data.get('title1')
@@ -104,44 +109,6 @@ class HelloAPI(views.APIView):
         else:
             return response.Response({"pk is required!!"})
 
-class hello(views.APIView):
-    serializer_class=Blog_serializer.blogseri
-    def get(self,request):
-        blogmodel=BlogModel.objects.all()
-        print(blogmodel)
-        dict={}
-        for key,each in enumerate(blogmodel):
-            dict[key]={
-                "title":each.title,
-                "desc:":each.description,
-                "date":each.date
-            }
-        dict=list(dict.values())    
-        print(dict)    
-        return response.Response({"data":dict})
-    def post(self,request):
-        blog_seri=self.serializer_class(data=request.data)
-        if blog_seri.is_valid():
-            title1=blog_seri.validated_data.get("title1")
-            obj=BlogModel()
-            obj.title=title1
-            obj.save()
-            print(obj)
-        else:
-            return response.Response({"message":"error"})    
-        return response.Response("successfully updated")    
-    
-# class HelloApi_viewsets(viewsets.ViewSet):
-#     serializer=Blog_serializer.blogseri
-#     def list(self,request):
-        
-#         printname=['this is is msg printing for the utility']
-#         return response.Response(printname)
-
-#     def create(self,request):
-#         blog_seri=self.serializer(data=request.data)
-#         if blog_seri.is_valid():
-            
             
 
        
