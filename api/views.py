@@ -1,7 +1,8 @@
 
 from functools import partial
 from django.core.checks import messages
-from rest_framework import views, response, status
+from django.core.validators import validate_email
+from rest_framework import views, response, status,viewsets
 from . models import blog as BlogModel
 from . import serializer as Blog_serializer
 from django.forms.models import model_to_dict
@@ -101,3 +102,20 @@ class HelloAPI(views.APIView):
             return response.Response({"message":'Succesfuly deleted'})
         else:
             return response.Response({"pk is required!!"})
+
+# class HelloApi_viewsets(viewsets.ViewSet):
+    serializer=Blog_serializer.blogseri
+    def list(self,request):
+
+        printname=['this is is msg printing for the utility']
+        return response.Response(printname)
+
+    def create(self,request):
+        blog_seri=self.serializer(data=request.data)
+        if blog_seri.is_valid():
+            title=blog_seri.validated_data.get("title1")
+            description=blog_seri.validated_data.get("description1")
+            date
+
+       
+
