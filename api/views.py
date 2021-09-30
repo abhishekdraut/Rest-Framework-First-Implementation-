@@ -2,6 +2,7 @@
 from functools import partial
 from django.core.checks import messages
 from django.core.validators import validate_email
+from django.db.models.query import QuerySet
 from rest_framework import views, response, status,viewsets
 from rest_framework.serializers import Serializer
 from . models import blog as BlogModel
@@ -46,11 +47,12 @@ class HelloAPI(views.APIView):
     def post(self,request):
 
         blog_seri= self.serializer_class(data=request.data)     #second pass the request data to serializer and use that data through 
-                                                                #validator .is valid() is must to fetch data from serializer.        
+        print(request)                                                       #validator .is valid() is must to fetch data from serializer is usnig 
+                                                                # data= in serailizer class.        
         if blog_seri.is_valid():
-            title=blog_seri.validated_data.get('title1')        #extraction of validated data.
-            description=blog_seri.validated_data.get('description1')
-            date=blog_seri.validated_data.get('date1')
+            title=blog_seri.validated_data.get('title')        #extraction of validated data.
+            description=blog_seri.validated_data.get('description')
+            date=blog_seri.validated_data.get('date')
             
             blog=BlogModel.objects.create(title=title, description=description,date=date)
             print(blog)
@@ -109,7 +111,33 @@ class HelloAPI(views.APIView):
         else:
             return response.Response({"pk is required!!"})
 
-            
+class Viewset(viewsets.ViewSet):
+    serializer_class=Blog_serializer.blogseri    #defined serializer in serailizer_class is mendatory step.
+
+    def list(self ,request):                       
+        queryset=BlogModel.objects.all()                             #import data for DB
+        serialize=self.serializer_class(queryset,many=True)          #pass imported object in serializer .(many objects are coming from DB)
+        print(serialize.data)
+
+        return response.Response(serialize.data)
+
+
+    def retrieve(self,request,pk=None):                         #retrieve used to fetch single object from Db
+
+        queryset=BlogModel.objects.get(pk=pk)
+        serialize=self.serializer_class(queryset)
+        print(serialize.data)
+                
+        return response.Response(serialize.data)
+
+
+    def create(self,request):                                   #create used to creete the new object at db
+        serialize=self.serializer_class(data=request.data)
+        serialize.is_valid(raise_exception=True)
+        serialize.save()
+        
+        
+        return response.Response("create!!") 
 
        
 
